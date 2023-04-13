@@ -5,6 +5,7 @@
     "@react-navigation/native-stack": "^6.9.12",
     "@reduxjs/toolkit": "^1.9.3",
     "expo": "^48.0.7",
+    "expo-image": "~1.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.6",

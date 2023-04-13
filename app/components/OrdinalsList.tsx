@@ -21,12 +21,10 @@ const OrdinalsList = ({ ordinals, navigation }) => {
       {ordinals.length ? <Text style={styles.text}>Results</Text> : <></>}
       <View style={styles.ordinalsList}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={ordinals}
           renderItem={({ item }) => (
-            <OrdinalItem
-              inscription={item}
-              navigation={navigation}
-            />
+            <OrdinalItem inscription={item} navigation={navigation} />
           )}
           keyExtractor={(item) => item.id}
         />

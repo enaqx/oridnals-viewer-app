@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 import type { RootState } from "../../app/store";
@@ -162,9 +162,9 @@ const Main = ({ navigation }) => {
           <Text style={styles.text}>Look up</Text>
         </Pressable>
       </View>
-      <View>
+      <SafeAreaView style={styles.ordinalsViewContainer}>
         <OrdinalsList ordinals={ordinals} navigation={navigation} />
-      </View>
+      </SafeAreaView>
     </View>
   );
 };
