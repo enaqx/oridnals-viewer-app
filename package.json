@@ -1,9 +1,10 @@
 {
   "dependencies": {
+    "@expo/webpack-config": "^18.0.1",
     "expo": "^48.0.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.71.3",
+    "react-native": "0.71.6",
     "react-native-web": "~0.18.7"
   },
   "devDependencies": {
