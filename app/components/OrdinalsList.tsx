@@ -1,22 +1,21 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, Pressable } from "react-native";
 import Arrow from "../assets/arrow.svg";
 
 import styles from "../themes/styles";
 
-type OrdinalItemProps = {
-  inscriptionNumber: string;
-};
-
-const OrdinalItem = ({ inscriptionNumber }: OrdinalItemProps) => (
-  <View style={styles.ordinalItem}>
-    <Text style={styles.text}>{inscriptionNumber}</Text>
+const OrdinalItem = ({ inscription, navigation }) => (
+  <Pressable
+    style={styles.ordinalItem}
+    onPress={() => navigation.navigate("Details", inscription)}
+  >
+    <Text style={styles.text}>{inscription.inscriptionNumber}</Text>
     <View>
       <Arrow width={20} height={20} />
     </View>
-  </View>
+  </Pressable>
 );
 
-const OrdinalsList = ({ ordinals }) => {
+const OrdinalsList = ({ ordinals, navigation }) => {
   return (
     <View style={styles.ordinalsListContainer}>
       {ordinals.length ? <Text style={styles.text}>Results</Text> : <></>}
@@ -24,7 +23,10 @@ const OrdinalsList = ({ ordinals }) => {
         <FlatList
           data={ordinals}
           renderItem={({ item }) => (
-            <OrdinalItem inscriptionNumber={item.inscriptionNumber} />
+            <OrdinalItem
+              inscription={item}
+              navigation={navigation}
+            />
           )}
           keyExtractor={(item) => item.id}
         />

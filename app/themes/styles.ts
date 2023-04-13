@@ -11,6 +11,14 @@ const styles = StyleSheet.create({
     paddingLeft: "5%",
     paddingRight: "5%",
   },
+  detailsScreenContainer: {
+    flex: 1,
+    backgroundColor: theme.colors.dark,
+    justifyContent: "flex-start",
+    paddingTop: "20%",
+    paddingLeft: "5%",
+    paddingRight: "5%",
+  },
   titleContainer: {
     alignItems: "center",
   },

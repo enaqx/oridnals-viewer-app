@@ -33,7 +33,7 @@ const testOrdinal = {
     "/tx/9a2315da257d6c1010157bec4fecb20472666055ed79cd7462c28cf15b298522",
 };
 
-const Main = () => {
+const Main = ({ navigation }) => {
   const { ordinals, unspentOutputTxIds, counterUnspentOutputsCheck } =
     useSelector((state: RootState) => state.ordinals);
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ const Main = () => {
 
   const { data: ordinalDetailsData } = useGetOrdinalDetailsQuery(
     currentOrdinal,
-    { skip: currentOrdinal === '' }
+    { skip: currentOrdinal === "" }
   );
 
   if (unspentOutputsData) {
@@ -90,7 +90,7 @@ const Main = () => {
 
   useEffect(() => {
     if (inscriptionCheckData?.id) {
-      setCurrentOrdinals([...currentOrdinals, inscriptionCheckData.id])
+      setCurrentOrdinals([...currentOrdinals, inscriptionCheckData.id]);
     }
   }, [inscriptionCheckData]);
 
@@ -102,8 +102,7 @@ const Main = () => {
 
   useEffect(() => {
     if (currentOrdinals.length > 0) {
-      const [currentOrdinal, ...remainOrdinals] =
-      currentOrdinals;
+      const [currentOrdinal, ...remainOrdinals] = currentOrdinals;
       setCurrentOrdinals(remainOrdinals);
       setCurrentOrdinal(currentOrdinal);
     } else {
@@ -164,7 +163,7 @@ const Main = () => {
         </Pressable>
       </View>
       <View>
-        <OrdinalsList ordinals={ordinals} />
+        <OrdinalsList ordinals={ordinals} navigation={navigation} />
       </View>
     </View>
   );
