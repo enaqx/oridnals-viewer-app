@@ -1,48 +1,48 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from "react-native";
 
-import theme from '../themes/theme'
+import theme from "../themes/theme";
 
 const styles = StyleSheet.create({
   mainScreenContainer: {
     flex: 1,
     backgroundColor: theme.colors.dark,
-    justifyContent: 'flex-start',
-    paddingTop: '20%',
-    paddingLeft: '5%',
-    paddingRight: '5%'
+    justifyContent: "flex-start",
+    paddingTop: "20%",
+    paddingLeft: "5%",
+    paddingRight: "5%",
   },
   titleContainer: {
-    alignItems: 'center'
+    alignItems: "center",
   },
   textContainer: {
-    paddingTop: '10%'
+    paddingTop: "10%",
   },
   text: {
     color: theme.colors.light,
-    fontWeight: '600',
-    fontSize: 20
+    fontWeight: "600",
+    fontSize: 20,
   },
   inputContainer: {
-    paddingTop: '5%'
+    paddingTop: "5%",
   },
   input: {
-    padding: '5%',
+    padding: "5%",
     backgroundColor: theme.colors.darkLight,
     color: theme.colors.light,
-    fontWeight: '600'
+    fontWeight: "600",
   },
   buttonContainer: {
-    paddingTop: '5%'
+    paddingTop: "5%",
   },
   button: {
-    padding: '6%',
+    padding: "6%",
     backgroundColor: theme.colors.blue,
-    alignItems: 'center',
-    borderRadius: 10
+    alignItems: "center",
+    borderRadius: 10,
   },
   ordinalsListContainer: {
-    paddingTop: '5%',
-    paddingLeft: '2%'
+    paddingTop: "5%",
+    paddingLeft: "2%",
   },
   ordinalItem: {
     flex: 1,
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     paddingBottom: "12%",
   },
   ordinalsList: {
-    paddingTop: '12%',
-  }
-})
+    paddingTop: "12%",
+  },
+});
 
-export default styles
+export default styles;

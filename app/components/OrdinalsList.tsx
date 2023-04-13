@@ -1,11 +1,11 @@
-import { View, Text, FlatList } from 'react-native'
-import Arrow from '../assets/arrow.svg'
+import { View, Text, FlatList } from "react-native";
+import Arrow from "../assets/arrow.svg";
 
-import styles from '../themes/styles'
+import styles from "../themes/styles";
 
 type OrdinalItemProps = {
-  inscriptionNumber: string
-}
+  inscriptionNumber: string;
+};
 
 const OrdinalItem = ({ inscriptionNumber }: OrdinalItemProps) => (
   <View style={styles.ordinalItem}>
@@ -14,7 +14,7 @@ const OrdinalItem = ({ inscriptionNumber }: OrdinalItemProps) => (
       <Arrow width={20} height={20} />
     </View>
   </View>
-)
+);
 
 const OrdinalsList = ({ ordinals }) => {
   return (
@@ -30,7 +30,7 @@ const OrdinalsList = ({ ordinals }) => {
         />
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default OrdinalsList
+export default OrdinalsList;

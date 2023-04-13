@@ -1,35 +1,56 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface Ordinal {
-  id: string
-  inscriptionNumber: string;
-  ownerAddress: string
-  outputValue: string
-  contentType: string
-  contentLength: string
-  location: string
-  genesisTransaction: string
-}
+import type { Ordinal } from "../types";
 
 export interface OrdinalsState {
-  ordinals: Ordinal[]
+  ordinals: Ordinal[];
+  ordinalsId: string[];
+  unspentOutputTxIds: string[];
+  counterUnspentOutputsCheck: number;
 }
 
 const initialState: OrdinalsState = {
-  ordinals: []
-}
+  ordinals: [],
+  ordinalsId: [],
+  unspentOutputTxIds: [],
+  counterUnspentOutputsCheck: 0,
+};
 
 export const ordinalsSlice = createSlice({
-  name: 'ordinals',
+  name: "ordinals",
   initialState,
   reducers: {
     addOrdinal: (state, action: PayloadAction<Ordinal>) => {
-      state.ordinals.push(action.payload)
-    }
-  }
-})
+      state.ordinals.push(action.payload);
+    },
 
-export const { addOrdinal } = ordinalsSlice.actions
+    clearOrdinals: (state) => {
+      state.ordinals = [];
+    },
 
-export default ordinalsSlice.reducer
+    addUnspentOutputsTxIds: (state, action: PayloadAction<string[]>) => {
+      state.unspentOutputTxIds = action.payload;
+    },
+
+    countUnspentOutputsCheck: (state) => {
+      state.counterUnspentOutputsCheck += 1;
+    },
+
+    removeUnspentOutputsTxIds: (state, action: PayloadAction<string>) => {
+      state.unspentOutputTxIds = state.unspentOutputTxIds.filter(
+        (txid) => txid !== action.payload
+      );
+    },
+  },
+});
+
+export const {
+  addOrdinal,
+  clearOrdinals,
+  addUnspentOutputsTxIds,
+  countUnspentOutputsCheck,
+  removeUnspentOutputsTxIds,
+} = ordinalsSlice.actions;
+
+export default ordinalsSlice.reducer;
