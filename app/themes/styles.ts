@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
     paddingRight: "5%",
     paddingBottom: "5%",
   },
+  scrollContainer: {
+    flex: 1,
+  },
   titleContainer: {
     alignItems: "center",
   },
@@ -132,14 +135,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.dark,
     alignItems: "center",
     justifyContent: "center",
-    height: windowWidth,
-    width: windowWidth,
   },
   ordinalImage: {
     flex: 1,
     width: "100%",
-    height: "100%",
-    backgroundColor: theme.colors.light,
+    backgroundColor: theme.colors.dark,
   },
 });
 

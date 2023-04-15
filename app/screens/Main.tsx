@@ -147,6 +147,7 @@ const Main = ({ navigation }) => {
             setAddress(e);
             setCurrentError(null);
           }}
+          onSubmitEditing={handleLookup}
           value={address}
           editable={!isDisabled()}
         />

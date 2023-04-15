@@ -28,27 +28,29 @@ const AttributeValue = ({ title, value }) => {
 
 const Details = ({ route }) => {
   const { inscriptionNumber, metadata } = route.params;
-  
+
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   return (
     <View style={styles.detailsScreenContainer}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {!metadata["content type"].includes("text/plain") && (
-          <View style={styles.ordinalImageContainer}>
-            <Image
-              style={styles.ordinalImage}
-              source={{
-                uri: `https://ordin.s3.amazonaws.com/inscriptions/${metadata.id}`,
-              }}
-              placeholder={blurhash}
-              contentFit="cover"
-              transition={1000}
-            />
-          </View>
-        )}
-
+      {!metadata["content type"].includes("text/plain") && (
+        <View style={styles.ordinalImageContainer}>
+          <Image
+            style={styles.ordinalImage}
+            source={{
+              uri: `https://ordin.s3.amazonaws.com/inscriptions/${metadata.id}`,
+            }}
+            placeholder={blurhash}
+            contentFit="contain"
+            transition={1000}
+          />
+        </View>
+      )}
+      <ScrollView
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={[styles.textContainer, styles.borderBottom]}>
           <Text style={styles.text}>{inscriptionNumber}</Text>
         </View>
