@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  SafeAreaView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -16,13 +23,18 @@ const Main = ({ navigation }) => {
   const { ordinals } = useSelector((state: RootState) => state.ordinals);
   const dispatch = useDispatch();
   const [address, setAddress] = useState("");
+  const [currentError, setCurrentError] = useState(null);
 
   /**
    * Get unspent outputs tx ids
    */
   const [lokupUnspentOutputs, setLokupUnspentOutputs] = useState(false);
   const [txIds, setTxIds] = useState([]);
-  const { error: unspentOutputDataError, data: unspentOutputData } = useQuery({
+  const {
+    error: unspentOutputDataError,
+    data: unspentOutputData,
+    isFetching: isUnspentOutputFetching,
+  } = useQuery({
     queryKey: ["unspentOutput"],
     queryFn: (): Promise<UnspentOutputs[]> =>
       axios
@@ -43,6 +55,7 @@ const Main = ({ navigation }) => {
     if (unspentOutputDataError) {
       setLokupUnspentOutputs(false);
       setAddress("");
+      setCurrentError("Failed to retrieve ordinals data");
     }
   }, [unspentOutputDataError]);
 
@@ -112,6 +125,12 @@ const Main = ({ navigation }) => {
     }
   };
 
+  const isDisabled = () => {
+    return (
+      isUnspentOutputFetching || txIds.length > 0 || currentOrdinals.length > 0
+    );
+  };
+
   return (
     <View style={styles.mainScreenContainer}>
       <View style={styles.titleContainer}>
@@ -124,15 +143,35 @@ const Main = ({ navigation }) => {
         <TextInput
           autoCapitalize={"none"}
           style={styles.input}
-          onChangeText={setAddress}
+          onChangeText={(e) => {
+            setAddress(e);
+            setCurrentError(null);
+          }}
           value={address}
+          editable={!isDisabled()}
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable onPress={handleLookup} style={styles.button}>
-          <Text style={styles.text}>Look up</Text>
+        <Pressable
+          onPress={handleLookup}
+          style={isDisabled() ? styles.buttonDisabled : styles.button}
+          disabled={isDisabled()}
+        >
+          {isDisabled() ? (
+            <View style={styles.buttonContainerLooking}>
+              <Text style={styles.text}>Looking up</Text>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <Text style={styles.text}>Look up</Text>
+          )}
         </Pressable>
       </View>
+      {unspentOutputDataError && (
+        <View style={styles.ordinalsErrorContainer}>
+          <Text style={styles.errorText}>{currentError}</Text>
+        </View>
+      )}
       <SafeAreaView style={styles.ordinalsViewContainer}>
         <OrdinalsList ordinals={ordinals} navigation={navigation} />
       </SafeAreaView>

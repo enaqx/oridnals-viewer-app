@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     paddingTop: "2%",
     paddingLeft: "5%",
     paddingRight: "5%",
+    paddingBottom: "5%",
   },
   titleContainer: {
     alignItems: "center",
@@ -59,6 +60,12 @@ const styles = StyleSheet.create({
     color: theme.colors.light,
     fontWeight: "600",
     fontSize: 20,
+    paddingRight: "4%",
+  },
+  errorText: {
+    color: theme.colors.red,
+    fontWeight: "600",
+    fontSize: 20,
   },
   subtitleText: {
     color: hexToRGBA(theme.colors.light, 0.7),
@@ -82,14 +89,29 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingTop: "5%",
   },
+  buttonContainerLooking: {
+    display: "flex",
+    flexDirection: "row",
+  },
   button: {
     padding: "6%",
     backgroundColor: theme.colors.blue,
     alignItems: "center",
     borderRadius: 10,
   },
+  buttonDisabled: {
+    padding: "6%",
+    backgroundColor: theme.colors.darkLight,
+    alignItems: "center",
+    borderRadius: 10,
+  },
   ordinalsViewContainer: {
     flex: 1,
+  },
+  ordinalsErrorContainer: {
+    flex: 1,
+    paddingTop: "4%",
+    paddingLeft: "2%",
   },
   ordinalsListContainer: {
     paddingTop: "5%",
