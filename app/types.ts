@@ -1,3 +1,19 @@
+export type UnspentOutputs = {
+  txid: string;
+  vout: number;
+  status: {
+    confirmed: boolean;
+    block_height: number;
+    block_hash: string;
+    block_time: number;
+  };
+  value: number;
+};
+
+export type AvailableOrdinal = {
+  id: string;
+};
+
 export type Ordinal = {
   inscriptionNumber: string;
   metadata: {

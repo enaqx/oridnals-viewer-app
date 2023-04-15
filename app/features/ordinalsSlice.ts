@@ -28,29 +28,9 @@ export const ordinalsSlice = createSlice({
     clearOrdinals: (state) => {
       state.ordinals = [];
     },
-
-    addUnspentOutputsTxIds: (state, action: PayloadAction<string[]>) => {
-      state.unspentOutputTxIds = action.payload;
-    },
-
-    countUnspentOutputsCheck: (state) => {
-      state.counterUnspentOutputsCheck += 1;
-    },
-
-    removeUnspentOutputsTxIds: (state, action: PayloadAction<string>) => {
-      state.unspentOutputTxIds = state.unspentOutputTxIds.filter(
-        (txid) => txid !== action.payload
-      );
-    },
   },
 });
 
-export const {
-  addOrdinal,
-  clearOrdinals,
-  addUnspentOutputsTxIds,
-  countUnspentOutputsCheck,
-  removeUnspentOutputsTxIds,
-} = ordinalsSlice.actions;
+export const { addOrdinal, clearOrdinals } = ordinalsSlice.actions;
 
 export default ordinalsSlice.reducer;

@@ -1,146 +1,117 @@
 import { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 import type { RootState } from "../../app/store";
 
 import OrdinalsList from "../components/OrdinalsList";
 import styles from "../themes/styles";
-import { useGetUnspentOutputsByAddressQuery } from "../services/blockstream";
-import {
-  useCheckOrdinalInscriptionQuery,
-  useGetOrdinalDetailsQuery,
-} from "../services/xverse";
-import {
-  addOrdinal,
-  clearOrdinals,
-  addUnspentOutputsTxIds,
-  countUnspentOutputsCheck,
-  removeUnspentOutputsTxIds,
-} from "../features/ordinalsSlice";
+import { addOrdinal, clearOrdinals } from "../features/ordinalsSlice";
 import { StatusBar } from "expo-status-bar";
-
-const testOrdinal = {
-  id: "9a2315da257d6c1010157bec4fecb20472666055ed79cd7462c28cf15b298522i0",
-  inscriptionNumber: "Inscription 402189",
-  ownerAddress:
-    "bc1pe6y27ey6gzh6p0j250kz23zra7xn89703pvmtzx239zzstg47j3s3vdvvs",
-  outputValue: "8880",
-  contentType: "image/webp",
-  contentLength: "3468 bytes",
-  location:
-    "163d36edada94746d7688cd8136cd35c68195aced5086bf6224c69896d39871d:0:0",
-  genesisTransaction:
-    "/tx/9a2315da257d6c1010157bec4fecb20472666055ed79cd7462c28cf15b298522",
-};
+import { AvailableOrdinal, Ordinal, UnspentOutputs } from "../types";
 
 const Main = ({ navigation }) => {
-  const { ordinals, unspentOutputTxIds, counterUnspentOutputsCheck } =
-    useSelector((state: RootState) => state.ordinals);
+  const { ordinals } = useSelector((state: RootState) => state.ordinals);
   const dispatch = useDispatch();
   const [address, setAddress] = useState("");
-  const [performLookup, setPerformLookup] = useState(false);
-  const [finishLookup, setFinishLookup] = useState(true);
-  const [currentOrdinals, setCurrentOrdinals] = useState([]);
-  const [currentOrdinal, setCurrentOrdinal] = useState("");
-  const [currentUnspentOutputs, setCurrentUnspentOutputs] = useState([]);
-  const [currentUnspentOutput, setCurrentUnspentOutput] = useState("");
 
-  const { data: unspentOutputsData, error: unspentOutputsError } =
-    useGetUnspentOutputsByAddressQuery(address, { skip: !performLookup });
-
-  const {
-    data: inscriptionCheckData,
-    error: inscriptionCheckError,
-    isSuccess,
-  } = useCheckOrdinalInscriptionQuery(currentUnspentOutput, {
-    skip: currentUnspentOutput === "",
+  /**
+   * Get unspent outputs tx ids
+   */
+  const [lokupUnspentOutputs, setLokupUnspentOutputs] = useState(false);
+  const [txIds, setTxIds] = useState([]);
+  const { error: unspentOutputDataError, data: unspentOutputData } = useQuery({
+    queryKey: ["unspentOutput"],
+    queryFn: (): Promise<UnspentOutputs[]> =>
+      axios
+        .get(`https://blockstream.info/api/address/${address}/utxo`)
+        .then((res) => res.data),
+    enabled: lokupUnspentOutputs,
   });
 
-  const { data: ordinalDetailsData } = useGetOrdinalDetailsQuery(
-    currentOrdinal,
-    { skip: currentOrdinal === "" }
-  );
-
-  if (unspentOutputsData) {
-    setPerformLookup(false);
-    // setFinishLookup(false);
-    setAddress("");
-    const txIds = unspentOutputsData.map((tx) => tx.txid);
-    setCurrentUnspentOutputs(txIds);
-    // dispatch(addUnspentOutputsTxIds(txIds));
-  }
-
-  if (unspentOutputsError) {
-    console.log(unspentOutputsError);
-    setPerformLookup(false);
-    setAddress("");
-  }
+  useEffect(() => {
+    if (unspentOutputData) {
+      setLokupUnspentOutputs(false);
+      setAddress("");
+      setTxIds(unspentOutputData.map((tx) => tx.txid));
+    }
+  }, [unspentOutputData]);
 
   useEffect(() => {
-    if (currentUnspentOutputs.length > 0) {
-      const [currentUnspentOutput, ...remainUnspentOutputs] =
-        currentUnspentOutputs;
-      console.log(currentUnspentOutput);
-      setCurrentUnspentOutputs(remainUnspentOutputs);
-      setCurrentUnspentOutput(currentUnspentOutput);
-    } else {
-      setCurrentUnspentOutput("");
+    if (unspentOutputDataError) {
+      setLokupUnspentOutputs(false);
+      setAddress("");
     }
-  }, [currentUnspentOutputs]);
+  }, [unspentOutputDataError]);
+
+  /**
+   * Get available ordinals
+   */
+  const availableOrdinals = useQueries({
+    queries: txIds?.map((txId) => {
+      return {
+        queryKey: ["availableOrdinal", txId],
+        queryFn: (): Promise<AvailableOrdinal> =>
+          axios
+            .get(`https://api.xverse.app/v1/ordinals/output/${txId}/0`)
+            .then((res) => res.data),
+        enabled: txIds.length > 0,
+      };
+    }),
+  });
+
+  const [currentOrdinals, setCurrentOrdinals] = useState([]);
+  useEffect(() => {
+    if (
+      availableOrdinals.length > 0 &&
+      availableOrdinals.map((d) => d.isFetched).every(Boolean)
+    ) {
+      setCurrentOrdinals(availableOrdinals.map((d) => d?.data?.id));
+      setTxIds([]);
+    }
+  }, [availableOrdinals]);
+
+  /**
+   * Get ordinals details
+   */
+  const ordinalDetails = useQueries({
+    queries: currentOrdinals?.map((ordinalId) => {
+      return {
+        queryKey: ["ordinal", ordinalId],
+        queryFn: (): Promise<Ordinal> =>
+          axios
+            .get(`https://api.xverse.app/v1/ordinals/${ordinalId}`)
+            .then((res) => res.data),
+        enabled: currentOrdinals.length > 0,
+      };
+    }),
+  });
 
   useEffect(() => {
-    if (inscriptionCheckData?.id) {
-      setCurrentOrdinals([...currentOrdinals, inscriptionCheckData.id]);
+    if (
+      ordinalDetails.length > 0 &&
+      ordinalDetails.map((d) => d.isFetched).every(Boolean)
+    ) {
+      ordinalDetails.map((d) => {
+        dispatch(addOrdinal(d.data));
+      });
+      setCurrentOrdinals([]);
     }
-  }, [inscriptionCheckData]);
+  }, [ordinalDetails]);
 
-  if (inscriptionCheckData && inscriptionCheckData.id) {
-    console.log("currentOrdinal", inscriptionCheckData.id);
-    // setCurrentOrdinal(inscriptionCheckData.id);
-    // dispatch(countUnspentOutputsCheck());
-  }
-
-  useEffect(() => {
-    if (currentOrdinals.length > 0) {
-      const [currentOrdinal, ...remainOrdinals] = currentOrdinals;
-      setCurrentOrdinals(remainOrdinals);
-      setCurrentOrdinal(currentOrdinal);
-    } else {
-      setCurrentOrdinal("");
-    }
-  }, [currentOrdinals]);
-
-  useEffect(() => {
-    if (ordinalDetailsData?.inscriptionNumber) {
-      dispatch(addOrdinal(ordinalDetailsData));
-    }
-  }, [ordinalDetailsData]);
-
-  // if (counterUnspentOutputsCheck == 1) {
-  //   setFinishLookup(true);
-  // }
-
-  // if (ordinalDetailsData) {
-  //   console.log("ordinalDetailsData", ordinalDetailsData);
-  //   dispatch(addOrdinal(ordinalDetailsData));
-  //   setCurrentOrdinal("");
-  // }
+  const clearLookupState = () => {
+    dispatch(clearOrdinals());
+  };
 
   const handleLookup = () => {
     console.log("dispatch", address);
     if (address.length > 0) {
-      dispatch(clearOrdinals());
-      setPerformLookup(true);
+      clearLookupState();
+      setLokupUnspentOutputs(true);
     }
   };
-
-  // console.log("currentUnspentOutputs", currentUnspentOutputs);
-  console.log("ordinals", ordinals.length);
-  // console.log("unspentOutputTxIds", unspentOutputTxIds);
-  // console.log("unspentOutputTxIds.length", unspentOutputTxIds.length);
-  // console.log("inscriptionCheckData", inscriptionCheckData);
-  // console.log("counterUnspentOutputsCheck", counterUnspentOutputsCheck);
 
   return (
     <View style={styles.mainScreenContainer}>

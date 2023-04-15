@@ -69,9 +69,6 @@ const styles = StyleSheet.create({
     color: theme.colors.light,
     fontWeight: "600",
     fontSize: 18,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
   },
   inputContainer: {
     paddingTop: "5%",
