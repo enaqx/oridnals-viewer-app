@@ -26,7 +26,7 @@ const OrdinalsList = ({ ordinals, navigation }) => {
           renderItem={({ item }) => (
             <OrdinalItem inscription={item} navigation={navigation} />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(_, idx) => idx.toString()}
         />
       </View>
     </View>

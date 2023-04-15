@@ -106,7 +106,6 @@ const Main = ({ navigation }) => {
   };
 
   const handleLookup = () => {
-    console.log("dispatch", address);
     if (address.length > 0) {
       clearLookupState();
       setLokupUnspentOutputs(true);
