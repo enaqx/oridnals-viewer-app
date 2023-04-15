@@ -36,7 +36,7 @@ const Details = ({ route }) => {
 
   return (
     <View style={styles.detailsScreenContainer}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {!metadata["content type"].includes("text/plain") && (
           <View style={styles.ordinalImageContainer}>
             <Image

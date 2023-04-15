@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.dark,
     alignItems: "center",
     justifyContent: "center",
-    height: 200,
+    height: windowWidth,
     width: windowWidth,
   },
   ordinalImage: {

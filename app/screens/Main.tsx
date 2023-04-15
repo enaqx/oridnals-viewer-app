@@ -18,6 +18,7 @@ import {
   countUnspentOutputsCheck,
   removeUnspentOutputsTxIds,
 } from "../features/ordinalsSlice";
+import { StatusBar } from "expo-status-bar";
 
 const testOrdinal = {
   id: "9a2315da257d6c1010157bec4fecb20472666055ed79cd7462c28cf15b298522i0",
@@ -165,6 +166,7 @@ const Main = ({ navigation }) => {
       <SafeAreaView style={styles.ordinalsViewContainer}>
         <OrdinalsList ordinals={ordinals} navigation={navigation} />
       </SafeAreaView>
+      <StatusBar style="light" />
     </View>
   );
 };
